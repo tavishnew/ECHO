@@ -1,6 +1,6 @@
 .lang-selector {
   position: relative;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   z-index: 1000;
 }
 
@@ -9,20 +9,20 @@
   align-items: center;
   gap: 6px;
   background: rgba(255,255,255,0.15);
-  border: 1.5px solid rgba(15,107,111,0.35);
-  border-radius: 20px;
+  border: 1px solid var(--echo-glaze); box-shadow: var(--echo-clay-inset);
+  border-radius: 999px;
   padding: 7px 14px;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
-  color: #0f6b6f;
+  color: #6B5E88;
   cursor: pointer;
   transition: 0.25s;
   white-space: nowrap;
 }
 
 .lang-trigger:hover {
-  background: rgba(15,107,111,0.08);
-  border-color: #0f6b6f;
+  background: rgba(107,94,136,0.08);
+  border-color: #6B5E88;
 }
 
 .lang-globe { font-size: 15px; }
@@ -33,9 +33,9 @@
   top: calc(100% + 8px);
   right: 0;
   background: #fff;
-  border: 1.5px solid rgba(15,107,111,0.2);
-  border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border: 1px solid var(--echo-glaze);
+  border-radius: 16px;
+  box-shadow: var(--echo-clay-shadow);
   min-width: 190px;
   max-height: 320px;
   overflow-y: auto;
@@ -61,11 +61,11 @@
 }
 
 .lang-option:hover {
-  background: #e8f7f8;
+  background: #ecebe8;
 }
 
 .lang-option.active {
-  background: #0f6b6f;
+  background: #6B5E88;
   color: #fff;
 }
 
@@ -78,7 +78,7 @@
 .lang-english {
   font-size: 12px;
   color: #888;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .lang-option.active .lang-english {

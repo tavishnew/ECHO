@@ -11,11 +11,26 @@ function HomePage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Set initial background color
-    document.body.style.backgroundColor = '#E6F7FF';
-    return () => {
-      document.body.style.backgroundColor = '';
-    };
+    // Scroll / load reveal system: fade + lift elements as they enter the viewport.
+    document.documentElement.classList.add('js');
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   return (
@@ -23,36 +38,38 @@ function HomePage() {
       <Navbar />
 
       <section className="section1">
-        <div className="ChildImage">
+        <div className="section1-copy">
+          <div className="text2 reveal">
+            <h3>{t("RESONATING WITH EVERY LEARNER")}</h3>
+          </div>
+
+          <div className="text1 reveal" style={{ '--d': '0.08s' }}>
+            <h1>{t("EchoEdu: The Voice of Every")}<br />{t("Child's Future.")}</h1>
+          </div>
+
+          <div className="text3 reveal" style={{ '--d': '0.16s' }}>
+            <h2>{t("A voice-first AI tutor that turns any phone into a personal, gamified learning companion. Fully on-device, accessible, and designed for social good.")}</h2>
+          </div>
+
+          <div className="buttons reveal" style={{ '--d': '0.24s' }}>
+            <button className="button1" onClick={() => navigate(user ? '/dashboard' : '/signup')}>
+              {user ? t("Dashboard") : t("Join the Pilot")}
+            </button>
+          </div>
+        </div>
+
+        <div className="ChildImage reveal" style={{ '--d': '0.18s' }}>
           <img src="/child_first_page.png" width={500} height={550} alt={t("Child learning")} />
-        </div>
-
-        <div className="text2">
-          <h3>{t("RESONATING WITH EVERY LEARNER")}</h3>
-        </div>
-
-        <div className="text1">
-          <h1>{t("EchoEdu: The Voice of Every")}<br />{t("Child's Future.")}</h1>
-        </div>
-
-        <div className="text3">
-          <h2>{t("A voice-first AI tutor that turns any phone into a personal, gamified learning companion. Fully on-device, accessible, and designed for social good.")}</h2>
-        </div>
-
-        <div className="buttons">
-          <button className="button1" onClick={() => navigate(user ? '/dashboard' : '/signup')}>
-            {user ? t("Dashboard") : t("Join the Pilot")}
-          </button>
         </div>
       </section>
 
       <section id="Header1" className="section2">
-        <div className="Header1">
+        <div className="Header1 reveal">
           <h1>{t("How it Works")}</h1>
           <p>{t("Three pillars designed to bridge the educational divide using the power of voice and edge AI.")}</p>
         </div>
         <div className="features">
-          <div className="box1">
+          <div className="box1 reveal">
             <div className="icon">
               <i className="ri-user-voice-line"></i>
             </div>
@@ -60,7 +77,7 @@ function HomePage() {
             <p>{t("Designed from the ground up for blind and disabled children, prioritizing speech over complex visual UI.")}</p>
           </div>
 
-          <div className="box2">
+          <div className="box2 reveal" style={{ '--d': '0.12s' }}>
             <div className="icon1">
               <i className="ri-magic-line"></i>
             </div>
@@ -68,7 +85,7 @@ function HomePage() {
             <p>{t("Designed to be easy to use, removing barriers to learning through voice interaction.")}</p>
           </div>
 
-          <div className="box3">
+          <div className="box3 reveal" style={{ '--d': '0.24s' }}>
             <div className="icon2">
               <i className="ri-gamepad-line"></i>
             </div>
@@ -80,14 +97,14 @@ function HomePage() {
 
       <section id="section3content" className="section3">
         <div className="section3content">
-          <div className="section3header">
+          <div className="section3header reveal">
             <h3>{t("OUR MISSION")}</h3>
             <h1>{t("AI for Social Good.")}</h1>
             <p>
               {t("We believe that location, internet access, or physical ability should never be a barrier to quality education. EchoEdu is specifically optimized to run on $50 budget devices, bringing a world-class mentor to children in the most remote corners of the world.")}
             </p>
 
-            <div className="section3stats">
+            <div className="section3stats reveal" style={{ '--d': '0.1s' }}>
               <div>
                 <h2>1M+</h2>
                 <span>{t("Children Targeted")}</span>
@@ -99,7 +116,7 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="section3image">
+          <div className="section3image reveal" style={{ '--d': '0.18s' }}>
             <img src="/section3image.png" alt="mission" />
           </div>
         </div>
@@ -107,7 +124,7 @@ function HomePage() {
 
       <section id="section4container" className="section4">
         <div className="section4container">
-          <div className="section4header">
+          <div className="section4header reveal">
             <span className="tag">{t("DESIGNED FOR ALL")}</span>
             <h1>{t("Radical Inclusivity in Learning")}</h1>
             <p>
@@ -116,8 +133,8 @@ function HomePage() {
           </div>
 
           <div className="section4features">
-            <div className="featureCard">
-              <div className="iconCircle">👁️</div>
+            <div className="featureCard reveal">
+            <div className="iconCircle"><i className="ri-eye-line"></i></div>
               <div>
                 <h3>{t("Screen-Reader Optimization")}</h3>
                 <p>
@@ -126,8 +143,8 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="featureCard">
-              <div className="iconCircle">🎤</div>
+            <div className="featureCard reveal" style={{ '--d': '0.1s' }}>
+            <div className="iconCircle"><i className="ri-mic-line"></i></div>
               <div>
                 <h3>{t("Voice-First Navigation")}</h3>
                 <p>
@@ -136,8 +153,8 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="featureCard">
-              <div className="iconCircle">🌐</div>
+            <div className="featureCard reveal" style={{ '--d': '0.2s' }}>
+            <div className="iconCircle"><i className="ri-global-line"></i></div>
               <div>
                 <h3>{t("Indian Language Support")}</h3>
                 <p>
@@ -146,8 +163,8 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="featureCard">
-              <div className="iconCircle">📶</div>
+            <div className="featureCard reveal" style={{ '--d': '0.3s' }}>
+            <div className="iconCircle"><i className="ri-wifi-line"></i></div>
               <div>
                 <h3>{t("Offline Reliability")}</h3>
                 <p>
@@ -157,7 +174,7 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="section4cta">
+          <div className="section4cta reveal" style={{ '--d': '0.15s' }}>
             <h2>{t("Ready to change the future of learning?")}</h2>
             <p>
               {t("Join our early pilot program and help us bring the voice of education to those who need it most.")}
@@ -167,7 +184,7 @@ function HomePage() {
         </div>
       </section>
 
-      <footer className="footer">
+      <footer className="footer reveal">
         <div className="footer-container">
           <div className="footer-left">
             <h2>EchoEdu</h2>
@@ -187,7 +204,7 @@ function HomePage() {
         </div>
       </footer>
 
-      <footer className="lastfooter">{t("©2026 EchoEdu. Resonating with every learner.")}</footer>
+      <footer className="lastfooter reveal" style={{ '--d': '0.1s' }}>{t("©2026 EchoEdu. Resonating with every learner.")}</footer>
     </>
   );
 }

@@ -1,9 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
-
 .pricing-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #eef7fb 0%, #ddeef6 100%);
-  font-family: 'Lexend', sans-serif;
+  background: var(--echo-bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 24px;
 }
 
@@ -11,7 +9,7 @@
   position: absolute;
   top: -40px;
   left: 0;
-  background: #1565c0;
+  background: #6B5E88;
   color: #fff;
   padding: 8px 16px;
   z-index: 9999;
@@ -33,20 +31,20 @@
 .pricing-back {
   border: none;
   background: transparent;
-  color: #0f6b6f;
+  color: #6B5E88;
   font-size: 14px;
   cursor: pointer;
 }
 
 .pricing-header h1 {
   margin: 6px 0 10px;
-  font-size: 32px;
-  color: #032b33;
+  font-size: 32px; font-family: 'Fraunces', Georgia, serif;
+  color: #1A1714;
 }
 
 .pricing-header p {
   margin: 0;
-  color: #4a6b70;
+  color: #6B6560;
   max-width: 600px;
   line-height: 1.6;
 }
@@ -62,16 +60,16 @@
 .pricing-card {
   border-radius: 24px;
   padding: 28px 24px;
-  background: #fff;
-  box-shadow: 0 16px 36px rgba(0,0,0,0.08);
+  background: var(--echo-bg);
+  box-shadow: var(--echo-clay-shadow);
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.free-card { border: 1px solid #d8e8ee; }
+.free-card { border: 1px solid #dcd9d4; }
 
-.premium-card { border: 1px solid #ffe4a4; }
+.premium-card { border: 1px solid #d8c39a; }
 
 .pricing-label {
   display: inline-flex;
@@ -79,20 +77,20 @@
   gap: 8px;
   font-size: 13px;
   font-weight: 700;
-  color: #0f6b6f;
+  color: #6B5E88;
 }
 
-.pricing-label.premium { color: #b06908; }
+.pricing-label.premium { color: #6f5b39; }
 
 .pricing-card h2 {
   margin: 0;
-  color: #032b33;
-  font-size: 22px;
+  color: #1A1714;
+  font-size: 22px; font-family: 'Fraunces', Georgia, serif;
 }
 
 .pricing-price {
-  font-size: 32px;
-  color: #0f6b6f;
+  font-size: 32px; font-family: 'Fraunces', Georgia, serif;
+  color: #6B5E88;
   font-weight: 700;
 }
 
@@ -105,16 +103,16 @@
 }
 
 .pricing-card li {
-  color: #48686f;
+  color: #6B6560;
   line-height: 1.5;
 }
 
 .pricing-upgrade {
   margin-top: auto;
   border: none;
-  background: linear-gradient(135deg, #0f6b6f, #0b5258);
+  background: linear-gradient(135deg, #6B5E88, #574c73);
   color: white;
-  border-radius: 28px;
+  border-radius: 999px; border: 1px solid var(--echo-glaze); box-shadow: var(--echo-clay-shadow-sm); color: #F5F3EF;
   padding: 14px 22px;
   font-size: 15px;
   font-weight: 700;
@@ -131,22 +129,22 @@
 }
 
 .pricing-detail {
-  background: #fff;
-  border-radius: 22px;
+  background: var(--echo-bg);
+  border-radius: 24px; box-shadow: var(--echo-clay-shadow-sm);
   padding: 24px;
-  border: 1px solid #d8e8ee;
+  border: 1px solid #dcd9d4;
 }
 
 .pricing-detail h3 {
   margin-top: 0;
   margin-bottom: 10px;
-  color: #032b33;
+  color: #1A1714;
 }
 
 .pricing-detail p,
 .pricing-detail ul {
   margin: 0;
-  color: #4a6b70;
+  color: #6B6560;
   line-height: 1.7;
 }
 
@@ -160,15 +158,15 @@
 .pricing-detail li::before {
   content: '✓';
   margin-right: 8px;
-  color: #0f6b6f;
+  color: #6B5E88;
 }
 
 .pricing-accessibility {
-  background: #fff;
-  border-radius: 22px;
+  background: var(--echo-bg);
+  border-radius: 24px; box-shadow: var(--echo-clay-shadow-sm);
   padding: 24px;
   margin-top: 24px;
-  border: 1px solid #d8e8ee;
+  border: 1px solid #dcd9d4;
   max-width: 1140px;
   margin-left: auto;
   margin-right: auto;
@@ -176,7 +174,7 @@
 
 .pricing-accessibility h3 {
   margin-top: 0;
-  color: #032b33;
+  color: #1A1714;
 }
 
 .accessibility-block {
@@ -188,7 +186,7 @@
 
 .accessibility-block h4 {
   margin-bottom: 10px;
-  color: #0f6b6f;
+  color: #6B5E88;
 }
 
 .accessibility-block ul {
@@ -202,7 +200,7 @@
 .accessibility-block li::before {
   content: '•';
   margin-right: 8px;
-  color: #0f6b6f;
+  color: #6B5E88;
 }
 
 @media (max-width: 920px) {

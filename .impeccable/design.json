@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-13T00:00:00Z",
+  "title": "Design System: ECHO — Voice-First AI Tutor",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Dusty Lavender", "canonical": "#6B5E88", "tonalRamp": ["#3c3450", "#4a4062", "#6B5E88", "#897da0", "#A898C0", "#c3bad6", "#ddd7e8", "#f1eef7"] },
+      "sage": { "role": "secondary", "displayName": "Dusty Sage Green", "canonical": "#5A7A68", "tonalRamp": ["#2f4337", "#3d5649", "#5A7A68", "#6f8c7c", "#8AB4A0", "#a9c8bb", "#c8dcd3", "#e8f1ed"] },
+      "sky": { "role": "secondary", "displayName": "Steel Blue", "canonical": "#4A6E88", "tonalRamp": ["#273a49", "#335063", "#4A6E88", "#5f82a0", "#7A9CB8", "#9bb6cd", "#bdd2e1", "#e2eef5"] },
+      "blush": { "role": "secondary", "displayName": "Dusty Rose", "canonical": "#8A5250", "tonalRamp": ["#492b2a", "#644039", "#8A5250", "#a46c69", "#B88888", "#cda7a7", "#e2c9c9", "#f2e6e6"] },
+      "cream": { "role": "secondary", "displayName": "Warm Umber", "canonical": "#8A7248", "tonalRamp": ["#493c27", "#644f33", "#8A7248", "#a58960", "#B8A060", "#ceb88c", "#e2d8bb", "#f3eede"] },
+      "neutral-bg": { "role": "neutral", "displayName": "Warm Light Grey", "canonical": "#EAE8E4", "tonalRamp": ["#8f8a83", "#a8a39b", "#c2bdb5", "#d4cfc7", "#EAE8E4", "#efedea", "#f4f3f0", "#faf9f7"] },
+      "ink": { "role": "neutral", "displayName": "Near-Black Warm", "canonical": "#1A1714", "tonalRamp": ["#1A1714", "#3a352f", "#5a544c", "#7b746a", "#9c948a", "#bcb4a9", "#dcd4c9", "#f3efe9"] },
+      "ink-muted": { "role": "neutral", "displayName": "Secondary Warm Grey", "canonical": "#6B6560", "tonalRamp": ["#3f3b37", "#564f49", "#6B6560", "#857d76", "#a39a91", "#c0b7ad", "#ddd4ca", "#f1ece6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Fraunces", "purpose": "Hero and section headings, brand wordmark only." },
+      "body": { "displayName": "Plus Jakarta Sans", "purpose": "Body, UI labels, buttons, nav, data, chat." }
+    },
+    "shadows": [
+      { "name": "clay-lg", "value": "16px 16px 32px rgba(40,38,34,0.28), -16px -16px 32px rgba(255,255,255,0.82), inset 4px 4px 12px rgba(255,255,255,0.82), inset -4px -4px 12px rgba(40,38,34,0.10)", "purpose": "Large clay cards (32px radius)." },
+      { "name": "clay-sm", "value": "8px 8px 16px rgba(40,38,34,0.22), -8px -8px 16px rgba(255,255,255,0.78), inset 2px 2px 6px rgba(255,255,255,0.82), inset -2px -4px 6px rgba(40,38,34,0.10)", "purpose": "Buttons, pills, circles (999px / 50% radius)." },
+      { "name": "clay-inset", "value": "inset 2px 2px 6px rgba(255,255,255,0.78), inset -2px -2px 6px rgba(40,38,34,0.10), 2px 2px 4px rgba(40,38,34,0.10)", "purpose": "Recessed pills and badges that sit into the surface." }
+    ],
+    "motion": [
+      { "name": "ease-clay", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default easing for state transitions and lift/press." },
+      { "name": "mic-pulse", "value": "mic-pulse 1.2s ease-in-out infinite", "purpose": "Listening mic pulse: scale 1 -> 1.08 with expanding red ring." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "900px" },
+      { "name": "lg", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Clay Button (Primary)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Lavender pill CTA with the small clay shadow; presses in on active.",
+      "html": "<button class=\"ds-btn-primary\">Start learning free</button>",
+      "css": ".ds-btn-primary { background:#6B5E88; color:#F5F3EF; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-weight:600; font-size:16px; padding:14px 32px; border:none; border-radius:999px; border:1px solid rgba(255,255,255,0.70); box-shadow:8px 8px 16px rgba(40,38,34,0.22), -8px -8px 16px rgba(255,255,255,0.78), inset 2px 2px 6px rgba(255,255,255,0.82), inset -2px -4px 6px rgba(40,38,34,0.10); cursor:pointer; transition:transform .15s cubic-bezier(0.22,1,0.36,1), box-shadow .15s; } .ds-btn-primary:hover { box-shadow:10px 10px 20px rgba(40,38,34,0.26), -10px -10px 20px rgba(255,255,255,0.82), inset 2px 2px 6px rgba(255,255,255,0.82), inset -2px -4px 6px rgba(40,38,34,0.10); } .ds-btn-primary:active { transform:scale(0.97); box-shadow:inset 2px 2px 6px rgba(255,255,255,0.78), inset -2px -2px 6px rgba(40,38,34,0.10), 2px 2px 4px rgba(40,38,34,0.10); } .ds-btn-primary:focus-visible { outline:2px solid #A898C0; outline-offset:2px; }"
+    },
+    {
+      "name": "Clay Card (Neutral)",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Warm-grey clay surface, 32px radius, glazed white edge.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Ask anything</h3><p class=\"ds-card-body\">Talk to your tutor in your own language.</p></div>",
+      "css": ".ds-card { background:#EAE8E4; border-radius:32px; padding:32px; border:1px solid rgba(255,255,255,0.70); box-shadow:16px 16px 32px rgba(40,38,34,0.28), -16px -16px 32px rgba(255,255,255,0.82), inset 4px 4px 12px rgba(255,255,255,0.82), inset -4px -4px 12px rgba(40,38,34,0.10); } .ds-card-title { font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:20px; color:#1A1714; margin:0 0 8px; } .ds-card-body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:15px; line-height:1.6; color:#6B6560; margin:0; }"
+    },
+    {
+      "name": "Clay Pill (Recessed)",
+      "kind": "chip",
+      "refersTo": "button-primary",
+      "description": "Inset/recessed label or filter pill that sits into the surface.",
+      "html": "<span class=\"ds-pill\">Hindi</span>",
+      "css": ".ds-pill { display:inline-flex; align-items:center; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-weight:600; font-size:14px; letter-spacing:0.02em; color:#6B5E88; background:#EAE8E4; padding:7px 16px; border-radius:999px; box-shadow:inset 2px 2px 6px rgba(255,255,255,0.78), inset -2px -2px 6px rgba(40,38,34,0.10), 2px 2px 4px rgba(40,38,34,0.10); }"
+    },
+    {
+      "name": "Claymic Tutor Button",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "Voice entry point: 44x44 clay circle, pulses red while listening. The one saturated control.",
+      "html": "<button class=\"ds-mic\" aria-label=\"Talk to your tutor\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#F5F3EF\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5 11a7 7 0 0 0 14 0\"/><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"21\"/></svg></button>",
+      "css": ".ds-mic { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.70); background:#6B5E88; color:#F5F3EF; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:8px 8px 16px rgba(40,38,34,0.22), -8px -8px 16px rgba(255,255,255,0.78), inset 2px 2px 6px rgba(255,255,255,0.82), inset -2px -4px 6px rgba(40,38,34,0.10); transition:transform .15s cubic-bezier(0.22,1,0.36,1); } .ds-mic:hover { transform:translateY(-1px); } .ds-mic:focus-visible { outline:2px solid #A898C0; outline-offset:2px; } .ds-mic.listening { background:#dc2626; animation:ds-mic-pulse 1.2s ease-in-out infinite; } @keyframes ds-mic-pulse { 0%,100% { transform:scale(1); box-shadow:0 0 0 0 rgba(220,38,38,0.4);} 50% { transform:scale(1.08); box-shadow:0 0 0 6px rgba(220,38,38,0);} }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Clay Classroom",
+    "overview": "ECHO's visual language holds claymorphism and minimalism in tension: tactile, puffy, three-dimensional surfaces from layered light-and-dark shadows, against a restrained, desaturated palette and generous whitespace. Warm and trustworthy for children and parents without slipping into toy-like loudness. The interface meets a child in their own language (12 Indian languages, Urdu RTL-aware) and honors spoken input, so type stays legible and uncluttered; a watching parent reads calm competence. Depth comes from shadow and glaze, never from saturation. The live codebase currently ships a divergent teal + yellow theme; this file documents the intended Claymorphism x Minimalism brand system.",
+    "keyCharacteristics": [
+      "Tactile clay surfaces (four-layer neumorphic shadow + glazed white edge), never flat.",
+      "Desaturated accent palette — color that reads without competing.",
+      "Warm off-white base (#EAE8E4), not pure white, not cream/beige AI-default.",
+      "Fraunces display + Plus Jakarta Sans body; display reserved for hero/section headings, not UI labels.",
+      "Generous radius (32px cards, 999px pills); soft, not sharp."
+    ],
+    "rules": [
+      { "name": "The Desaturated Voice Rule", "body": "Accents stay at the muted tones. Never promote a tint to a full-saturation CTA or use saturated hue for an inactive state; saturation is reserved for the live mic and active selection.", "section": "colors" },
+      { "name": "The One Warm Base Rule", "body": "Page background is #EAE8E4 (or its tinted blobs), never pure white and never the cream/sand AI default.", "section": "colors" },
+      { "name": "The Display-Stays-Hero Rule", "body": "Fraunces is for hero/section headings and the brand wordmark only. Buttons, nav, form controls, data, and chat use Plus Jakarta Sans.", "section": "typography" },
+      { "name": "The Language-First Rule", "body": "Every string is localized (12 languages). Urdu is RTL — layout, alignment, and icon direction must flip. Never hard-code English or LTR-only spacing.", "section": "typography" },
+      { "name": "The Glazed Edge Rule", "body": "Every lifted clay surface gets a 1px translucent-white border. No clay component ships without it.", "section": "elevation" },
+      { "name": "The Press-In Rule", "body": "Interactive clay elements invert their shadow and scale to 0.97 on :active. Hover may lift; active always presses.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do build depth with the four-layer clay shadow + glazed white edge on every lifted surface.",
+      "Do keep accents desaturated; let saturation appear only on the live mic and active selection.",
+      "Do use Fraunces for headings and Plus Jakarta Sans everywhere else.",
+      "Do preserve visible focus outlines and a 44x44px minimum touch target.",
+      "Do support the three accessibility modes and Urdu RTL out of the box.",
+      "Do keep the free experience complete; show Premium as a fair optional step up."
+    ],
+    "donts": [
+      "Don't make it toy-like or loud — no candy colors that make a parent distrust it.",
+      "Don't lead with a cluttered SaaS feature grid or upsell badges; show the tutoring.",
+      "Don't treat English as the default — every surface must be language-first; Urdu must flip RTL.",
+      "Don't build a cold, neon, dashboard-for-engineers look.",
+      "Don't flatten clay surfaces, drop the glazed border, or strip outline for 'clean'.",
+      "Don't use a display serif on buttons, nav, form controls, or data.",
+      "Don't use pure white or the cream/sand AI-default as the page background.",
+      "Don't ship a component with only some states."
+    ]
+  }
+}

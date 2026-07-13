@@ -1,10 +1,10 @@
 html { scroll-behavior: smooth; }
 
 .navbar {
-  background-color: #E6F7FF !important;
-  color: #006570;
+  background-color: #EAE8E4 !important;
+  color: #6B5E88;
   padding: 10px 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--echo-clay-shadow-sm); border-bottom: 1px solid var(--echo-glaze);
   position: sticky;
   top: 0;
   z-index: 999;
@@ -18,8 +18,7 @@ html { scroll-behavior: smooth; }
 
 .navbar-logo {
   font-size: 24px;
-  font-weight: 300;
-  font-family: lexend;
+  font-weight: 300; font-family: 'Fraunces', Georgia, serif;
   flex-shrink: 0;
 }
 
@@ -29,7 +28,7 @@ html { scroll-behavior: smooth; }
   justify-content: center;
   list-style: none;
   gap: 50px;
-  font-family: lexend;
+  font-family: Plus Jakarta Sans;
   margin: 0;
   padding: 0;
 }
@@ -52,12 +51,12 @@ html { scroll-behavior: smooth; }
   bottom: -4px;
   width: 0%;
   height: 2px;
-  background-color: #006570;
+  background-color: #6B5E88;
   transition: width 0.3s ease;
 }
 
 .navbar-item:hover::after { width: 100%; }
-.navbar-item:hover { color: #38abba; }
+.navbar-item:hover { color: #7a6f95; }
 
 .navbar-right {
   display: flex;
@@ -79,14 +78,14 @@ html { scroll-behavior: smooth; }
 }
 
 .navbar-username {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
-  color: #0f6b6f;
+  color: #6B5E88;
   font-weight: 500;
 }
 
 .tier-badge {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   padding: 3px 10px;
   border-radius: 12px;
@@ -94,24 +93,24 @@ html { scroll-behavior: smooth; }
 }
 
 .tier-badge.free {
-  background: #e8f7f8;
-  color: #0f6b6f;
-  border: 1px solid #b0dde2;
+  background: #ecebe8;
+  color: #6B5E88;
+  border: 1px solid #cfccc6;
 }
 
 .tier-badge.premium {
-  background: linear-gradient(135deg, #ffd400, #ffb700);
-  color: #073c3f;
+  background: linear-gradient(135deg, #8A7248, #B8A060);
+  color: #1A1714;
   border: none;
 }
 
 .navbar-btn-outline {
   background: transparent;
-  border: 1.5px solid #0f6b6f;
-  color: #0f6b6f;
+  border: 1.5px solid #6B5E88;
+  color: #6B5E88;
   padding: 8px 16px;
-  border-radius: 20px;
-  font-family: 'Lexend', sans-serif;
+  border-radius: 999px; box-shadow: var(--echo-clay-inset);
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -119,16 +118,16 @@ html { scroll-behavior: smooth; }
 }
 
 .navbar-btn-outline:hover {
-  background: #0f6b6f;
+  background: #6B5E88;
   color: white;
 }
 
 .navbar-item1 {
-  background-color: #0f6b6f;
+  background-color: #6B5E88;
   color: white;
   padding: 9px 20px;
-  border-radius: 25px;
-  font-family: 'Lexend', sans-serif;
+  border-radius: 999px; box-shadow: var(--echo-clay-shadow-sm); color: #F5F3EF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -138,4 +137,4 @@ html { scroll-behavior: smooth; }
   list-style: none;
 }
 
-.navbar-item1:hover { background-color: #0c5a5e; }
+.navbar-item1:hover { background-color: #574c73; }
