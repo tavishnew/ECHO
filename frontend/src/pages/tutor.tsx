@@ -98,7 +98,7 @@ export default function Tutor() {
         setApiError(msg);
         setMessages((prev) => [
           ...prev,
-          { id: nextId(), role: 'assistant', content: `⚠️ ${msg}`, error: true },
+          { id: nextId(), role: 'assistant', content: `âš ï¸ ${msg}`, error: true },
         ]);
       })
       .finally(() => setIsThinking(false));
@@ -234,7 +234,7 @@ export default function Tutor() {
         </button>
         <div className="text-center min-w-0">
           <p className="text-xs uppercase tracking-wider text-ink-subtle font-semibold">
-            {subject} · Class 5
+            {subject} Â· Class 5
           </p>
           <h1 className="font-display text-xl font-bold text-ink-deep truncate">{topic}</h1>
         </div>
@@ -256,7 +256,7 @@ export default function Tutor() {
       </motion.div>
 
       <div className="grid lg:grid-cols-[280px_1fr_240px] gap-6 items-start">
-        {/* Left panel — chapters */}
+        {/* Left panel â€” chapters */}
         <ClayCard className="p-6 hidden lg:block" style={{ backgroundColor: 'var(--bg-card-alt)' }}>
           <div className="w-10 h-1.5 rounded-full bg-primary mb-4" />
           <p className="text-xs uppercase tracking-wider font-semibold text-ink-subtle mb-4">{t('tutor.chapters')}</p>
@@ -278,7 +278,7 @@ export default function Tutor() {
           </ul>
         </ClayCard>
 
-        {/* Center — orb, mic, chat */}
+        {/* Center â€” orb, mic, chat */}
         <div className="flex flex-col gap-6">
           {/* Orb + Mic centerpiece */}
           <div className="flex flex-col items-center gap-4 py-2">
@@ -364,9 +364,12 @@ export default function Tutor() {
             <form onSubmit={(e) => { e.preventDefault(); sendMessage(input); }} className="mt-4 pt-4 border-t flex gap-3 items-center">
               <div className="flex-1 relative">
                 <ClayInput
+                  id="tutor-message"
+                  name="message"
+                  autoComplete="off"
                   value={displayValue}
                   onChange={(e) => setInput(e.target.value)}
-              {isListening ? t('tutor.listening') : t('tutor.tapMic')}
+              placeholder={isListening ? 'Listening…' : 'Ask anything, or just speak…'}
                   className="pr-4 h-14 rounded-full"
                   aria-label="Message"
                 />
@@ -389,7 +392,7 @@ export default function Tutor() {
           </ClayCard>
         </div>
 
-        {/* Right panel — context */}
+        {/* Right panel â€” context */}
         <ClayCard className="p-6 hidden lg:block" style={{ backgroundColor: 'var(--bg-card-alt)' }}>
           <div className="w-10 h-1.5 rounded-full bg-sky mb-4" />
           <div className="space-y-6">

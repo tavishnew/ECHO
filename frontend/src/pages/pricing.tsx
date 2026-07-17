@@ -52,18 +52,15 @@ export default function Pricing() {
     <PageTransition className="px-0">
       <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
         <Sidebar />
-        <main className="flex-1 px-4 md:px-8 pt-8 pb-20">
+        <main className="flex-1 px-4 md:px-8 pt-4 pb-20">
           <div className="max-w-5xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center max-w-2xl mx-auto"
-      >
-        <p className="text-xs uppercase tracking-[0.16em] font-semibold mb-4" style={{ color: 'var(--primary)' }}>
-          Pricing
-        </p>
-        <h1 className="font-display font-bold" style={{ fontSize: 'clamp(2.75rem, 5vw, 4.2rem)', letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--ink-deep)' }}>
+       className="text-center max-w-2xl mx-auto"
+     >
+       <h1 className="font-display font-bold" style={{ fontSize: 'clamp(2.75rem, 5vw, 4.2rem)', letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--ink-deep)' }}>
           Kind on families.
           <br /> Fair to teachers.
         </h1>

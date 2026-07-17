@@ -75,6 +75,9 @@ export default function Signup() {
                     <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.name')}</label>
                     <ClayInput 
                       required 
+                      id="name"
+                      name="name"
+                      autoComplete="name"
                       placeholder="e.g. Rahul" 
                       value={formData.name}
                       onChange={e => setFormData({...formData, name: e.target.value})}
@@ -84,6 +87,9 @@ export default function Signup() {
                     <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.parentEmail')}</label>
                     <ClayInput 
                       required 
+                      id="email"
+                      name="email"
+                      autoComplete="email"
                       type="email" 
                       placeholder="parent@example.com" 
                       value={formData.email}
@@ -95,8 +101,11 @@ export default function Signup() {
                     <div className="relative">
                       <ClayInput
                         required
+                        id="password"
+                        name="password"
+                        autoComplete="new-password"
                         type={showPw ? 'text' : 'password'}
-                        placeholder="••••••••"
+                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                         value={formData.password}
                         onChange={e => setFormData({ ...formData, password: e.target.value })}
                       />
@@ -128,7 +137,7 @@ export default function Signup() {
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-bold text-lg">{t('auth.free')}</h3>
-                      <span className="font-bold text-primary">₹0/mo</span>
+                      <span className="font-bold text-primary">â‚¹0/mo</span>
                     </div>
                     <p className="text-sm text-muted-foreground">Basic voice tutor, 3 subjects, 30 mins daily.</p>
                   </div>
@@ -139,7 +148,7 @@ export default function Signup() {
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-bold text-lg">{t('auth.premium')}</h3>
-                      <span className="font-bold text-sky">₹199/mo</span>
+                      <span className="font-bold text-sky">â‚¹199/mo</span>
                     </div>
                     <p className="text-sm text-muted-foreground">Unlimited tutoring, all subjects, progress reports.</p>
                   </div>

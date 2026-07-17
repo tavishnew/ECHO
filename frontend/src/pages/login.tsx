@@ -55,6 +55,9 @@ export default function Login() {
                 <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.email')}</label>
                 <ClayInput
                   required
+                  id="email"
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   placeholder="parent@example.com"
                   value={formData.email}
@@ -66,8 +69,11 @@ export default function Login() {
                 <div className="relative">
                   <ClayInput
                     required
+                    id="password"
+                    name="password"
+                    autoComplete="current-password"
                     type={showPw ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     value={formData.password}
                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                   />
