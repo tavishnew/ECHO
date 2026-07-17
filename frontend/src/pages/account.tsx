@@ -2,6 +2,7 @@ import { useAppStore } from '@/lib/store';
 import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
+import { Sidebar } from '@/components/layout/sidebar';
 import { LogOut, Settings, CreditCard } from 'lucide-react';
 import { useLocation, Link } from 'wouter';
 import { motion } from 'framer-motion';
@@ -33,7 +34,11 @@ export default function Account() {
   };
 
   return (
-    <PageTransition className="px-4 md:px-8 max-w-3xl mx-auto py-12">
+    <PageTransition className="px-0">
+      <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
+        <Sidebar />
+        <main className="flex-1 px-4 md:px-8 pt-8 pb-20 md:pb-8">
+          <div className="max-w-3xl mx-auto">
       <motion.h1 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -108,6 +113,9 @@ export default function Account() {
           </ClayButton>
         </motion.div>
       </motion.div>
+          </div>
+        </main>
+      </div>
     </PageTransition>
   );
 }

@@ -33,6 +33,7 @@ export interface AppState {
   purchasedRewards: string[];
   highContrast: boolean;
   textSize: 'normal' | 'large';
+  language: string;
 }
 
 interface AppContextType {
@@ -45,6 +46,7 @@ interface AppContextType {
   completeChapter: (chapterId: string) => void;
   toggleHighContrast: () => void;
   toggleTextSize: () => void;
+  setLanguage: (code: string) => void;
 }
 
 const defaultState: AppState = {
@@ -55,6 +57,7 @@ const defaultState: AppState = {
   purchasedRewards: [],
   highContrast: false,
   textSize: 'normal',
+  language: 'en',
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -114,8 +117,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const toggleHighContrast = () => setState(s => ({ ...s, highContrast: !s.highContrast }));
   const toggleTextSize = () => setState(s => ({ ...s, textSize: s.textSize === 'normal' ? 'large' : 'normal' }));
 
+  const setLanguage = (code: string) => setState(s => ({ ...s, language: code }));
+
   return (
-    <AppContext.Provider value={{ state, login, logout, updateUser, addPoints, buyReward, completeChapter, toggleHighContrast, toggleTextSize }}>
+    <AppContext.Provider value={{ state, login, logout, updateUser, addPoints, buyReward, completeChapter, toggleHighContrast, toggleTextSize, setLanguage }}>
       {children}
     </AppContext.Provider>
   );

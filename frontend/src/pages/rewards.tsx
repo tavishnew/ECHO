@@ -2,7 +2,8 @@ import { useAppStore } from '@/lib/store';
 import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
-import { Star, Crown, Palette, Sparkles, CheckCircle2, Gift } from 'lucide-react';
+import { Sidebar } from '@/components/layout/sidebar';
+import { Star, Crown, Palette, Sparkles, CheckCircle2, Gift, Flame, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -53,31 +54,55 @@ export default function Rewards() {
   };
 
   return (
-    <PageTransition className="px-4 md:px-8 max-w-5xl mx-auto py-12">
-      <motion.div 
+    <PageTransition className="px-0">
+      <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
+        <Sidebar />
+        <main className="flex-1 px-4 md:px-8 pt-8 pb-20 md:pb-8">
+          <div className="max-w-5xl mx-auto">
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12"
+        className="text-center mb-10"
       >
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-3">Rewards Store <Gift className="w-8 h-8 text-sage" /></h1>
-          <p className="text-muted-foreground text-lg">Spend your hard-earned points here.</p>
-        </div>
-        
-        <ClayCard className="px-6 py-4 flex items-center gap-4 bg-sky/10 border-none shadow-sm">
-          <div className="clay-circle w-12 h-12 flex items-center justify-center bg-sky text-sky-foreground shadow-sm">
-            <Star className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-sm text-muted-foreground font-bold">Your Balance</div>
-            <div className="text-2xl font-bold">{state.points} <span className="text-sm font-normal">pts</span></div>
-          </div>
-        </ClayCard>
+        <span className="inline-block clay-pill px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-sage mb-4">
+          Rewards
+        </span>
+        <h1 className="text-3xl md:text-5xl font-bold mb-3 flex items-center justify-center gap-3">
+          Rewards Store <Gift className="w-9 h-9 text-sage" />
+        </h1>
+        <p className="text-muted-foreground text-lg">Spend your hard-earned points on fun upgrades.</p>
       </motion.div>
+
+      {/* Colored stat row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Balance" value={`${state.points}`} unit="pts" color="var(--sky)" icon={<Star className="w-6 h-6" />} />
+        <StatCard label="Streak" value={`${state.streak}`} unit="days" color="var(--orange-clay)" icon={<Flame className="w-6 h-6" />} />
+        <StatCard label="Level" value={`${Math.floor(state.points / 200) + 1}`} unit="" color="var(--sage)" icon={<Trophy className="w-6 h-6" />} />
+        <StatCard label="Owned" value={`${state.purchasedRewards.length}`} unit="" color="var(--primary)" icon={<CheckCircle2 className="w-6 h-6" />} />
+      </div>
+
+      {/* Level progress */}
+      <ClayCard className="p-6 mb-10" style={{ backgroundColor: 'var(--bg-card-warm)' }}>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-sm font-semibold text-ink-subtle">Level {Math.floor(state.points / 200) + 1}</p>
+          <p className="text-sm font-semibold" style={{ color: 'var(--cream-gold)' }}>
+            {state.points} / {(Math.floor(state.points / 200) + 1) * 200} XP
+          </p>
+        </div>
+        <div className="relative h-3 rounded-full clay-inner overflow-hidden" style={{ backgroundColor: 'var(--bg-page)' }}>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${Math.min(100, (state.points % 200) / 2)}%` }}
+            transition={{ duration: 1.1 }}
+            className="h-full rounded-full"
+            style={{ background: 'linear-gradient(90deg, var(--primary), var(--cream-gold))' }}
+          />
+        </div>
+      </ClayCard>
 
       <AnimatePresence>
         {message && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -134,6 +159,46 @@ export default function Rewards() {
           );
         })}
       </motion.div>
+          </div>
+        </main>
+      </div>
     </PageTransition>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  unit,
+  color,
+  icon,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+  color: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      className="clay-card p-5 flex items-center gap-4 rounded-2xl"
+      style={{ backgroundColor: `color-mix(in oklab, ${color} 12%, var(--bg-card))` }}
+    >
+      <div
+        className="w-12 h-12 rounded-2xl flex items-center justify-center"
+        style={{ backgroundColor: `color-mix(in oklab, ${color} 18%, white)`, color }}
+      >
+        {icon}
+      </div>
+      <div>
+        <p className="text-xs uppercase tracking-wider font-semibold text-ink-subtle">{label}</p>
+        <p className="text-2xl font-bold text-ink-deep">
+          {value} {unit && <span className="text-sm font-normal text-ink-subtle">{unit}</span>}
+        </p>
+      </div>
+    </motion.div>
   );
 }

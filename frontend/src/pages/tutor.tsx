@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { useT } from '@/lib/i18n';
 import { useAppStore } from '@/lib/store';
 import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
 import { ClayInput } from '@/components/ui/clay-input';
+import { Sidebar } from '@/components/layout/sidebar';
 import { Send, BookOpen, ChevronLeft, AlertCircle, SlidersHorizontal, Clock, List, Volume2, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -23,9 +25,9 @@ const CURRICULUM: Record<string, string[]> = {
 };
 
 const SUBJECT_STYLES: Record<string, { heading: string; card: string; bar: string }> = {
-  Science: { heading: 'text-sage-dark', card: 'bg-sage/10 hover:bg-sage/20', bar: 'bg-sage' },
-  Math: { heading: 'text-primary-dark', card: 'bg-primary/10 hover:bg-primary/20', bar: 'bg-primary' },
-  History: { heading: 'text-sky-dark', card: 'bg-sky/10 hover:bg-sky/20', bar: 'bg-sky' },
+  Science: { heading: 'text-[#33503d]', card: 'bg-sage/15 hover:bg-sage/25', bar: 'bg-sage' },
+  Math: { heading: 'text-[#43395c]', card: 'bg-primary/15 hover:bg-primary/25', bar: 'bg-primary' },
+  History: { heading: 'text-[#2e4759]', card: 'bg-sky/15 hover:bg-sky/25', bar: 'bg-sky' },
 };
 
 type Msg = { id: string; role: 'user' | 'assistant'; content: string; error?: boolean };
@@ -35,9 +37,9 @@ const nextId = () => `m${++idCounter}`;
 let sessionCounter = 0;
 
 export default function Tutor() {
-  const { state } = useAppStore();
+  const { state, setLanguage } = useAppStore();
+  const t = useT();
 
-  const [language, setLanguage] = useState('en');
   const [subject, setSubject] = useState<string | null>(null);
   const [topic, setTopic] = useState<string | null>(null);
 
@@ -58,7 +60,7 @@ export default function Tutor() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { isListening, isSupported, transcript, start, stop, error: voiceError } =
-    useSpeechRecognition(language, (text) => sendMessage(text));
+    useSpeechRecognition(state.language, (text) => sendMessage(text));
 
   useEffect(() => {
     const id = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -84,7 +86,7 @@ export default function Tutor() {
     setApiError(null);
 
     askAI(history, {
-      languageCode: language,
+      languageCode: state.language,
       subject: subject ?? undefined,
       topic: topic ?? undefined,
     })
@@ -112,7 +114,7 @@ export default function Tutor() {
     const session = ++sessionCounter;
     speakingRef.current = id;
     setSpeakingId(id);
-    const ok = await speak(text, language, {
+    const ok = await speak(text, state.language, {
       rate,
       pitch,
       volume,
@@ -155,16 +157,20 @@ export default function Tutor() {
 
   if (!topic) {
     return (
-      <PageTransition className="px-4 md:px-8 max-w-4xl mx-auto py-12">
+      <PageTransition className="px-0">
+        <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
+          <Sidebar />
+          <main className="flex-1 px-4 md:px-8 pt-8 pb-20 md:pb-8">
+            <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl font-bold text-center sm:text-left"
           >
-            Choose a Topic
+            {t('tutor.chooseTopic')}
           </motion.h1>
-          <LanguageSelector value={language} onChange={setLanguage} />
+          <LanguageSelector value={state.language} onChange={setLanguage} />
         </div>
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-12">
           {Object.entries(CURRICULUM).map(([subj, topics]) => (
@@ -190,6 +196,9 @@ export default function Tutor() {
             </motion.div>
           ))}
         </motion.div>
+          </div>
+        </main>
+      </div>
       </PageTransition>
     );
   }
@@ -199,7 +208,11 @@ export default function Tutor() {
   const ss = String(seconds % 60).padStart(2, '0');
 
   return (
-    <PageTransition className="px-4 md:px-8 py-6 max-w-[1400px] mx-auto">
+    <PageTransition className="px-0">
+      <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
+        <Sidebar />
+        <main className="flex-1 px-4 md:px-8 pt-6 pb-20 md:pb-6">
+          <div className="max-w-[1400px] mx-auto">
       {/* Top bar */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -226,11 +239,11 @@ export default function Tutor() {
           <h1 className="font-display text-xl font-bold text-ink-deep truncate">{topic}</h1>
         </div>
         <div className="flex items-center gap-2">
-          <LanguageSelector value={language} onChange={setLanguage} />
+          <LanguageSelector value={state.language} onChange={setLanguage} />
           <button
             type="button"
             onClick={() => setShowVoice((v) => !v)}
-            aria-label="Voice settings"
+            aria-label={t('tutor.voiceSettings')}
             aria-pressed={showVoice}
             className={cn(
               'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
@@ -246,7 +259,7 @@ export default function Tutor() {
         {/* Left panel — chapters */}
         <ClayCard className="p-6 hidden lg:block" style={{ backgroundColor: 'var(--bg-card-alt)' }}>
           <div className="w-10 h-1.5 rounded-full bg-primary mb-4" />
-          <p className="text-xs uppercase tracking-wider font-semibold text-ink-subtle mb-4">Chapters</p>
+          <p className="text-xs uppercase tracking-wider font-semibold text-ink-subtle mb-4">{t('tutor.chapters')}</p>
           <ul className="space-y-1">
             {chapters.map((t) => (
               <li key={t}>
@@ -291,7 +304,7 @@ export default function Tutor() {
               />
             </div>
             <p className="text-center text-xs uppercase tracking-wider text-ink-subtle font-semibold">
-              {isListening ? 'Listening…' : 'Tap the mic to speak'}
+              {isListening ? t('tutor.listening') : t('tutor.tapMic')}
             </p>
           </div>
 
@@ -353,7 +366,7 @@ export default function Tutor() {
                 <ClayInput
                   value={displayValue}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder={isListening ? 'Listening…' : 'Ask anything, or just speak…'}
+              {isListening ? t('tutor.listening') : t('tutor.tapMic')}
                   className="pr-4 h-14 rounded-full"
                   aria-label="Message"
                 />
@@ -370,7 +383,7 @@ export default function Tutor() {
 
             {!isSupported && (
               <p className="mt-2 text-xs text-muted-foreground text-center">
-                Voice input needs Chrome or Edge. You can still type your questions.
+                {t('tutor.voiceInput')}
               </p>
             )}
           </ClayCard>
@@ -382,7 +395,7 @@ export default function Tutor() {
           <div className="space-y-6">
             <div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-ink-subtle font-semibold mb-3">
-                <Clock className="w-4 h-4" /> Session
+                <Clock className="w-4 h-4" /> {t('tutor.session')}
               </div>
               <div className="rounded-2xl p-5 text-center clay-inner" style={{ backgroundColor: 'rgba(107,94,136,0.10)' }}>
                 <p className="font-display text-3xl font-bold" style={{ color: 'var(--primary)' }}>
@@ -412,7 +425,7 @@ export default function Tutor() {
                 <Volume2 className="w-4 h-4" /> Speech pace
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs text-ink-subtle font-semibold">Slow</span>
+                <span className="text-xs text-ink-subtle font-semibold">{t('tutor.slow')}</span>
                 <input
                   type="range"
                   min={0.5}
@@ -423,11 +436,14 @@ export default function Tutor() {
                   aria-label="Speech speed"
                   className="flex-1 accent-[hsl(var(--primary))]"
                 />
-                <span className="text-xs text-ink-subtle font-semibold">Fast</span>
+                <span className="text-xs text-ink-subtle font-semibold">{t('tutor.fast')}</span>
               </div>
             </div>
           </div>
         </ClayCard>
+      </div>
+          </div>
+        </main>
       </div>
     </PageTransition>
   );

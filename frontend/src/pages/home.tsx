@@ -28,8 +28,8 @@ export default function Home() {
   return (
     <PageTransition className="pb-24">
       {/* Hero Section */}
-      <section className="pt-12 pb-32 px-4 md:px-8 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 overflow-hidden">
-        <div className="flex-1 text-center md:text-left -mt-8">
+      <section className="pt-0 pb-32 px-4 md:px-8 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 overflow-hidden">
+        <div className="flex-1 text-center md:text-left mt-2">
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -40,7 +40,7 @@ export default function Home() {
             <span>A friendly tutor in your pocket</span>
           </motion.div>
           
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight max-w-4xl">
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight max-w-4xl">
             Learn anything,<br/> in <span className="text-primary">your own language.</span>
           </h1>
           
@@ -60,17 +60,52 @@ export default function Home() {
               </ClayButton>
             </Link>
           </div>
+
+          {/* Social proof */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-10 flex items-center gap-4 justify-center md:justify-start text-sm text-ink-subtle"
+          >
+            <div className="flex -space-x-2">
+              {['#7D6FA3', '#6A8F7A', '#5B85A4', '#E88C5D'].map((c, i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2" style={{ background: c, borderColor: 'var(--bg-page)' }} />
+              ))}
+            </div>
+            Loved by 12,000+ families
+          </motion.div>
         </div>
 
         <motion.div 
-          className="flex-1 w-full max-w-md relative self-start -mt-8"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, type: 'spring' }}
+          className="flex-1 w-full max-w-md relative self-start -mt-6"
+          initial={{ opacity: 0, scale: 0.94, y: 30 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="clay-card p-4 rotate-2 hover:rotate-0 transition-transform duration-500">
              <img src="/child_first_page.png" alt="Child using ECHO" className="w-full h-auto rounded-xl shadow-inner object-cover" />
           </div>
+           <motion.div
+             initial={{ opacity: 0, x: 20 }}
+             animate={{ opacity: 1, x: 0 }}
+             transition={{ delay: 0.6, duration: 0.6 }}
+             className="absolute -bottom-6 -left-6"
+           >
+             <motion.div
+               animate={{ y: [0, -6, 0] }}
+               transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+               className="rounded-2xl px-5 py-3 flex items-center gap-3 clay-card bg-white"
+             >
+               <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(107,94,136,0.12)' }}>
+                 <Mic className="w-4 h-4" style={{ color: 'var(--primary)' }} />
+               </div>
+               <div>
+                 <p className="text-[11px] uppercase tracking-wider font-semibold text-ink-subtle">Listening</p>
+                 <p className="text-sm font-semibold text-ink">Tell me about oceans…</p>
+               </div>
+             </motion.div>
+           </motion.div>
         </motion.div>
       </section>
 
@@ -297,6 +332,7 @@ export default function Home() {
           transition={{ duration: 0.6, type: "spring" }}
         >
           <ClayCard className="bg-primary/5 p-12">
+            <img src="/echo-robot.png" alt="ECHO robot" className="w-28 h-28 mx-auto mb-2 object-contain drop-shadow-2xl animate-orb-float" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to make learning joyful?</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
               Join thousands of parents who trust ECHO to nurture their child's curiosity. Start free, upgrade only when you want more magic.

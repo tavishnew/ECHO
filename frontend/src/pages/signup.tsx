@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useLocation, Link } from 'wouter';
 import { useAppStore } from '@/lib/store';
+import { useT } from '@/lib/i18n';
 import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
 import { ClayInput } from '@/components/ui/clay-input';
-import { Eye, Brain, Ear, Wifi, User, Mail, Lock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Eye, EyeOff, Brain, Ear, Wifi, User, Mail, Lock, Mic } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Signup() {
   const [, setLocation] = useLocation();
   const { login } = useAppStore();
+  const t = useT();
   
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -20,6 +22,8 @@ export default function Signup() {
     tier: 'free' as 'free'|'premium',
     accessibilityPreference: 'None' as 'None' | 'Cognitive' | 'Low Vision' | 'Hard of Hearing' | 'Limited Internet'
   });
+
+  const [showPw, setShowPw] = useState(false);
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +48,7 @@ export default function Signup() {
   ];
 
   return (
-    <PageTransition className="min-h-[80vh] flex items-start justify-center pt-24 pb-12 px-4">
+      <PageTransition className="min-h-[80vh] flex items-start justify-center pt-0 pb-12 px-4">
       <div className="w-full max-w-md">
         
         <div className="mb-8 flex justify-center gap-2">
@@ -62,13 +66,13 @@ export default function Signup() {
             {step === 1 && (
               <motion.div initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div className="text-center mb-8">
-                  <h1 className="text-2xl font-bold mb-2">Welcome to ECHO</h1>
-                  <p className="text-muted-foreground">Let's set up your learning profile.</p>
+                  <h1 className="text-2xl font-bold mb-2">{t('auth.welcomeECHO')}</h1>
+                  <p className="text-muted-foreground">{t('auth.setupProfile')}</p>
                 </div>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">Your Name</label>
+                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.name')}</label>
                     <ClayInput 
                       required 
                       placeholder="e.g. Rahul" 
@@ -77,7 +81,7 @@ export default function Signup() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">Parent's Email</label>
+                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.parentEmail')}</label>
                     <ClayInput 
                       required 
                       type="email" 
@@ -87,14 +91,24 @@ export default function Signup() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">Password</label>
-                    <ClayInput 
-                      required 
-                      type="password" 
-                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
-                      value={formData.password}
-                      onChange={e => setFormData({...formData, password: e.target.value})}
-                    />
+                    <label className="block text-sm font-semibold mb-2 ml-1 text-foreground">{t('auth.password')}</label>
+                    <div className="relative">
+                      <ClayInput
+                        required
+                        type={showPw ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        value={formData.password}
+                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPw(v => !v)}
+                        aria-label={showPw ? 'Hide password' : 'Show password'}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-subtle hover:text-primary transition-colors"
+                      >
+                        {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -103,8 +117,8 @@ export default function Signup() {
             {step === 2 && (
               <motion.div initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div className="text-center mb-8">
-                  <h1 className="text-2xl font-bold mb-2">Choose a Plan</h1>
-                  <p className="text-muted-foreground">You can always change this later.</p>
+                  <h1 className="text-2xl font-bold mb-2">{t('auth.choosePlan')}</h1>
+                  <p className="text-muted-foreground">{t('auth.changeLater')}</p>
                 </div>
                 
                 <div className="grid gap-4">
@@ -113,8 +127,8 @@ export default function Signup() {
                     className={`p-4 rounded-2xl cursor-pointer transition-all ${formData.tier === 'free' ? 'clay-card ring-2 ring-primary' : 'bg-card/50 hover:bg-card border border-border'}`}
                   >
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-lg">Free</h3>
-                      <span className="font-bold text-primary">â‚¹0/mo</span>
+                      <h3 className="font-bold text-lg">{t('auth.free')}</h3>
+                      <span className="font-bold text-primary">₹0/mo</span>
                     </div>
                     <p className="text-sm text-muted-foreground">Basic voice tutor, 3 subjects, 30 mins daily.</p>
                   </div>
@@ -124,8 +138,8 @@ export default function Signup() {
                     className={`p-4 rounded-2xl cursor-pointer transition-all ${formData.tier === 'premium' ? 'clay-card ring-2 ring-primary' : 'bg-card/50 hover:bg-card border border-border'}`}
                   >
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-lg">Premium</h3>
-                      <span className="font-bold text-sky">â‚¹199/mo</span>
+                      <h3 className="font-bold text-lg">{t('auth.premium')}</h3>
+                      <span className="font-bold text-sky">₹199/mo</span>
                     </div>
                     <p className="text-sm text-muted-foreground">Unlimited tutoring, all subjects, progress reports.</p>
                   </div>
@@ -136,8 +150,8 @@ export default function Signup() {
             {step === 3 && (
               <motion.div initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div className="text-center mb-8">
-                  <h1 className="text-2xl font-bold mb-2">Accessibility Needs</h1>
-                  <p className="text-muted-foreground">How can we make ECHO best for you?</p>
+                  <h1 className="text-2xl font-bold mb-2">{t('auth.accessibility')}</h1>
+                  <p className="text-muted-foreground">{t('auth.howCan')}</p>
                 </div>
                 
                 <div className="grid gap-3">
@@ -173,15 +187,15 @@ export default function Signup() {
                 </ClayButton>
               )}
               <ClayButton type="submit" variant="primary" className="flex-1">
-                {step === 3 ? 'Start Learning' : 'Next Step'}
+                {step === 3 ? t('auth.startLearning') : t('auth.nextStep')}
               </ClayButton>
             </div>
 
           </form>
-          
+
           {step === 1 && (
             <p className="text-center text-sm text-muted-foreground mt-8">
-              Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Log in</Link>
+            {t('auth.alreadyAccount')} <Link href="/login" className="text-primary font-bold hover:underline">{t('auth.logInLink')}</Link>
             </p>
           )}
         </ClayCard>
