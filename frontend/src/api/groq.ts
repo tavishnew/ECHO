@@ -12,6 +12,7 @@ export interface AskOptions {
   languageCode?: string;
   subject?: string;
   topic?: string;
+  classLevel?: string;
 }
 
 /**
@@ -20,12 +21,12 @@ export interface AskOptions {
  */
 export async function askAI(
   messages: ChatMessage[],
-  { languageCode = 'en', subject, topic }: AskOptions = {}
+  { languageCode = 'en', subject, topic, classLevel }: AskOptions = {}
 ): Promise<string> {
   const res = await fetch(`${API_BASE}/ask`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages, languageCode, subject, topic }),
+    body: JSON.stringify({ messages, languageCode, subject, topic, classLevel }),
   });
 
   if (!res.ok) {

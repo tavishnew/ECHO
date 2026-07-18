@@ -31,6 +31,8 @@ export interface AppState {
   streak: number;
   completedChapters: string[];
   purchasedRewards: string[];
+  sessions: { title: string; subject: string; color: string; progress: number }[];
+  selectedClass: string;
   highContrast: boolean;
   textSize: 'normal' | 'large';
   language: string;
@@ -47,6 +49,7 @@ interface AppContextType {
   toggleHighContrast: () => void;
   toggleTextSize: () => void;
   setLanguage: (code: string) => void;
+  setSelectedClass: (c: string) => void;
 }
 
 const defaultState: AppState = {
@@ -55,6 +58,8 @@ const defaultState: AppState = {
   streak: 0,
   completedChapters: [],
   purchasedRewards: [],
+  sessions: [],
+  selectedClass: 'Class 5',
   highContrast: false,
   textSize: 'normal',
   language: 'en',
@@ -65,7 +70,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(() => {
     const saved = localStorage.getItem('echoedu_state');
-    return saved ? JSON.parse(saved) : defaultState;
+    if (!saved) return defaultState;
+    try {
+      // Merge over defaults so state saved by an older build (missing newer
+      // fields like selectedClass/language) still gets sane fallbacks instead
+      // of undefined — otherwise dashboard.tsx crashes on activeClass.replace.
+      return { ...defaultState, ...JSON.parse(saved) };
+    } catch {
+      return defaultState;
+    }
   });
 
   useEffect(() => {
@@ -119,8 +132,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (code: string) => setState(s => ({ ...s, language: code }));
 
+  const setSelectedClass = (c: string) => setState(s => ({ ...s, selectedClass: c }));
+
   return (
-    <AppContext.Provider value={{ state, login, logout, updateUser, addPoints, buyReward, completeChapter, toggleHighContrast, toggleTextSize, setLanguage }}>
+    <AppContext.Provider value={{ state, login, logout, updateUser, addPoints, buyReward, completeChapter, toggleHighContrast, toggleTextSize, setLanguage, setSelectedClass }}>
       {children}
     </AppContext.Provider>
   );

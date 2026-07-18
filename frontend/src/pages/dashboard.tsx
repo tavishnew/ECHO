@@ -2,6 +2,7 @@
 import { useT } from '@/lib/i18n';
 import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
+import { ClayButton } from '@/components/ui/clay-button';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Link, useLocation } from 'wouter';
 import {
@@ -15,7 +16,7 @@ import {
   Play,
   Sparkles,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 const classes = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6'];
@@ -26,11 +27,9 @@ const subjects = [
   { icon: BookOpen, title: 'English', chapters: '21 chapters', from: '#5B85A4', to: '#39566B' },
 ];
 
-const sessions = [
-  { title: 'Numbers Adventure', subject: 'Mathematics', color: '#7D6FA3', progress: 62 },
-  { title: 'The Water Cycle', subject: 'Science', color: '#6A8F7A', progress: 34 },
-];
-
+// Session data is sourced from the store so it reflects the real user — a
+// brand-new user with no history sees an empty state instead of fabricated
+// progress (ISSUE-020).
 const picks = [
   { icon: BookOpen, title: 'Story of the day', meta: '5 min · English' },
   { icon: Sparkles, title: 'Quick quiz', meta: '3 min · Mixed' },
@@ -70,7 +69,7 @@ function StatPill({
       style={{ backgroundColor: 'var(--bg-card)' }}
     >
       <div
-        className="w-8 h-8 rounded-full flex items-center justify-center"
+        className="stat-pill-icon w-8 h-8 rounded-full flex items-center justify-center"
         style={{ backgroundColor: `color-mix(in oklab, ${color} 14%, white)` }}
       >
         <Icon className="w-4 h-4" style={{ color }} />
@@ -84,10 +83,11 @@ function StatPill({
 }
 
 export default function Dashboard() {
-  const { state } = useAppStore();
+  const { state, setSelectedClass } = useAppStore();
+  const sessions = state.sessions;
   const t = useT();
   const [location, setLocation] = useLocation();
-  const [activeClass, setActiveClass] = useState('Class 5');
+  const activeClass = state.selectedClass;
 
   // Selecting a class now visibly changes the curriculum: the youngest
   // learners see friendlier subject names, and the chapter counts scale with
@@ -155,11 +155,11 @@ export default function Dashboard() {
                 return (
                   <motion.button
                     key={c}
-                    onClick={() => setActiveClass(c)}
+                    onClick={() => setSelectedClass(c)}
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`px-6 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap ${
-                      active ? 'text-white clay-btn-primary cursor-pointer' : 'text-ink-subtle clay-pill cursor-pointer'
+                    className={`px-6 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-shadow active:shadow-lg active:shadow-black/30 ${
+                      active ? 'text-white shadow-black/25 cursor-pointer' : 'text-ink-subtle cursor-pointer'
                     }`}
                     style={{ backgroundColor: active ? 'var(--primary)' : 'var(--bg-card)' }}
                   >
@@ -172,7 +172,15 @@ export default function Dashboard() {
             {/* Subjects */}
             <section>
               <h2 className="font-display text-2xl font-bold text-ink-deep">{t('dash.subjects')} · {activeClass}</h2>
-              <div className="grid md:grid-cols-3 gap-6 mt-6">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeClass}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="grid md:grid-cols-3 gap-6 mt-6"
+                >
                 {subjectsForClass.map((s, i) => (
                   <Link key={s.title} href="/tutor">
                     <motion.div
@@ -196,13 +204,28 @@ export default function Dashboard() {
                     </motion.div>
                   </Link>
                 ))}
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </section>
 
             {/* Continue */}
             <section>
               <h2 className="font-display text-2xl font-bold text-ink-deep">{t('dash.continue')}</h2>
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
+              <AnimatePresence mode="wait">
+                {sessions.length === 0 ? (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 clay-card p-10 text-center"
+                >
+                  <p className="text-muted-foreground">No sessions yet — start your first lesson!</p>
+                  <Link href="/tutor" className="inline-block mt-4">
+                    <ClayButton variant="primary">Begin Learning</ClayButton>
+                  </Link>
+                </motion.div>
+              ) : (
+                <div key={activeClass} className="grid md:grid-cols-2 gap-6 mt-6">
                 {sessions.map((s, i) => (
                   <motion.div
                     key={s.title}
@@ -221,13 +244,14 @@ export default function Dashboard() {
                             className="clay-inner rounded-full h-2 mt-4 overflow-hidden"
                             style={{ backgroundColor: 'var(--bg-page)' }}
                           >
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${s.progress}%` }}
-                              transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 + i * 0.1 }}
-                              className="h-full rounded-full"
-                              style={{ backgroundColor: s.color }}
-                            />
+                              <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${s.progress}%` }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 + i * 0.1 }}
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: s.color }}
+                              />
                           </div>
                           <p className="text-xs text-ink-subtle mt-2">{s.progress}% complete</p>
                         </div>
@@ -243,7 +267,9 @@ export default function Dashboard() {
                     </Link>
                   </motion.div>
                 ))}
-              </div>
+                  </div>
+                )}
+              </AnimatePresence>
             </section>
 
             {/* Today's picks */}

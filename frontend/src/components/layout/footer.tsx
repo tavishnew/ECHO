@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { Mic } from 'lucide-react';
+import { Mic, Linkedin } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -14,13 +14,26 @@ export function Footer() {
         <p className="text-sm text-ink-subtle text-center max-w-md">
           A warm, voice-first AI tutor for children. Safe. Multilingual. Inclusive.
         </p>
-        <div className="flex items-center gap-6 text-sm text-ink-muted">
-          <Link href="/pricing" className="hover:text-ink transition-colors">
-            Pricing
-          </Link>
-          <Link href="/tutor" className="hover:text-ink transition-colors">
-            Tutor
-          </Link>
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 text-sm text-ink-muted">
+          <div className="flex items-center gap-4">
+            <a
+              href="https://www.linkedin.com/in/tavish5h/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="w-9 h-9 rounded-full flex items-center justify-center clay-btn text-ink-muted hover:text-primary hover:bg-primary/10 transition-colors"
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/pricing" className="hover:text-ink transition-colors">
+              Pricing
+            </Link>
+            <Link href="/tutor" className="hover:text-ink transition-colors">
+              Tutor
+            </Link>
+          </div>
           <span className="text-ink-subtle">© {new Date().getFullYear()} ECHO Learning</span>
         </div>
       </div>

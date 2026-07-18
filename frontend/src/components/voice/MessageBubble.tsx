@@ -32,14 +32,14 @@ export function MessageBubble({
           <img src="/user.png" alt="" className="w-full h-full object-cover rounded-full" />
         </div>
       ) : (
-        <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center bg-sage text-white clay-circle shadow-sm">
-          <Bot className="w-6 h-6" />
-        </div>
+        <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-black">
+         <Bot className="w-6 h-6" />
+       </div>
       )}
       <div
         className={cn(
           'max-w-[80%] rounded-2xl p-4',
-          isUser ? 'bg-primary/10 rounded-tr-none' : 'bg-card-border/30 rounded-tl-none'
+          isUser ? 'bg-primary/10 rounded-tr-none' : 'rounded-tl-none -mt-3 sticky top-4 z-10'
         )}
       >
         <p className="text-lg leading-relaxed whitespace-pre-wrap">{content}</p>

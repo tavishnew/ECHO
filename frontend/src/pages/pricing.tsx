@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { PageTransition } from '@/components/layout/page-transition';
@@ -39,14 +39,8 @@ const faqs = [
 ];
 
 export default function Pricing() {
-  const { state, updateUser } = useAppStore();
-  const [, setLocation] = useLocation();
+  const { state } = useAppStore();
   const [open, setOpen] = useState<number | null>(0);
-
-  const handleUpgrade = () => {
-    updateUser({ tier: 'premium' });
-    setLocation('/dashboard');
-  };
 
   return (
     <PageTransition className="px-0">
@@ -60,11 +54,11 @@ export default function Pricing() {
         transition={{ duration: 0.6 }}
        className="text-center max-w-2xl mx-auto"
      >
-       <h1 className="font-display font-bold" style={{ fontSize: 'clamp(2.75rem, 5vw, 4.2rem)', letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--ink-deep)' }}>
+        <h1 className="font-display font-bold" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--ink-deep)' }}>
           Kind on families.
           <br /> Fair to teachers.
         </h1>
-        <p className="mt-6 text-lg text-ink-muted">
+        <p className="mt-6 text-base text-ink-muted">
           Start free for 14 days. Upgrade whenever you’re ready.
         </p>
       </motion.div>
@@ -119,8 +113,8 @@ export default function Pricing() {
           className="relative"
         >
           <span
-            className="absolute left-1/2 -translate-x-1/2 -top-4 px-4 py-1.5 rounded-full text-xs font-bold text-white z-10"
-            style={{ backgroundColor: 'var(--primary)', boxShadow: 'var(--shadow-clay-btn-primary)' }}
+            className="absolute left-1/2 -translate-x-1/2 -top-4 px-4 py-1.5 rounded-full text-xs font-bold text-black z-10"
+            style={{ backgroundColor: 'var(--primary)', color: 'black', boxShadow: 'var(--shadow-clay-btn-primary)' }}
           >
             Most popular
           </span>
@@ -155,8 +149,8 @@ export default function Pricing() {
                   Active Plan
                 </div>
               ) : (
-                <ClayButton variant="primary" className="w-full" onClick={handleUpgrade}>
-                  Start 14-day trial
+                <ClayButton variant="primary" className="w-full" disabled>
+                  Coming soon
                 </ClayButton>
               )}
             </div>

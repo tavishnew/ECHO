@@ -3,13 +3,16 @@ import { PageTransition } from '@/components/layout/page-transition';
 import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
 import { Sidebar } from '@/components/layout/sidebar';
-import { LogOut, Settings, CreditCard } from 'lucide-react';
+import { LanguageSelector } from '@/components/voice/LanguageSelector';
+import { LogOut, Settings, CreditCard, Globe } from 'lucide-react';
 import { useLocation, Link } from 'wouter';
 import { motion } from 'framer-motion';
+import { useT } from '@/lib/i18n';
 
 export default function Account() {
-  const { state, logout } = useAppStore();
+  const { state, logout, setLanguage } = useAppStore();
   const [, setLocation] = useLocation();
+  const t = useT();
 
   if (!state.user) return null;
 
@@ -96,6 +99,14 @@ export default function Account() {
                 <span className="text-muted-foreground">Accessibility Needs:</span>
                 <div className="text-xl font-bold text-foreground mt-1">
                   {state.user.accessibilityPreference}
+                </div>
+              </div>
+              <div className="mb-6">
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <Globe className="w-4 h-4" /> {t('side.language')}
+                </span>
+                <div className="mt-2">
+                  <LanguageSelector value={state.language} onChange={setLanguage} className="w-full" />
                 </div>
               </div>
               <Link href="/signup" className="mt-auto">

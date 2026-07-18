@@ -5,6 +5,8 @@ import { ClayButton } from '@/components/ui/clay-button';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { Sparkles, Brain, BookOpen, Volume2, Globe, WifiOff, Star, Mic, ArrowRight, Calculator, FlaskConical } from 'lucide-react';
+import { useAppStore } from '@/lib/store';
+import { LanguageSelector } from '@/components/voice/LanguageSelector';
 
 const steps = [
   { n: "01", icon: Mic, title: "Say hello", body: "Tap the orb and speak — ECHO listens and replies with a friendly voice." },
@@ -25,12 +27,21 @@ const testimonials = [
 ];
 
 export default function Home() {
+  const { state, setLanguage } = useAppStore();
   return (
-    <PageTransition className="pb-24">
+    <>
+      {/* Language switcher pinned to the bottom-right corner so it stays
+          reachable without disturbing the hero flow. Rendered as a sibling of
+          PageTransition (not inside it) because PageTransition applies a Framer
+          transform that would otherwise break position: fixed anchoring. */}
+      <div className="fixed bottom-4 right-4 z-[55] md:bottom-6 md:right-6">
+        <LanguageSelector value={state.language} onChange={setLanguage} />
+      </div>
+      <PageTransition className="pb-24">
       {/* Hero Section */}
-      <section className="pt-0 pb-32 px-4 md:px-8 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 overflow-hidden">
+      <section className="pt-8 pb-32 px-4 md:px-8 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 overflow-hidden">
         <div className="flex-1 text-center md:text-left mt-2">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
@@ -40,7 +51,7 @@ export default function Home() {
             <span>A friendly tutor in your pocket</span>
           </motion.div>
           
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight max-w-4xl">
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-6 leading-tight max-w-4xl">
             Learn anything,<br/> in <span className="text-primary">your own language.</span>
           </h1>
           
@@ -68,11 +79,11 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-10 flex items-center gap-4 justify-center md:justify-start text-sm text-ink-subtle"
           >
-            <div className="flex -space-x-2">
-              {['#7D6FA3', '#6A8F7A', '#5B85A4', '#E88C5D'].map((c, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2" style={{ background: c, borderColor: 'var(--bg-page)' }} />
-              ))}
-            </div>
+          <div className="flex -space-x-2" aria-hidden="true">
+            {['#7D6FA3', '#6A8F7A', '#5B85A4', '#E88C5D'].map((c, i) => (
+              <div key={i} className="w-8 h-8 rounded-full border-2" style={{ background: c, borderColor: 'var(--bg-page)' }} />
+            ))}
+          </div>
             Loved by 12,000+ families
           </motion.div>
         </div>
@@ -83,9 +94,9 @@ export default function Home() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="clay-card p-4 rotate-2 hover:rotate-0 transition-transform duration-500">
-             <img src="/child_first_page.png" alt="Child using ECHO" className="w-full h-auto rounded-xl shadow-inner object-cover" />
-          </div>
+          <motion.div whileHover={{ rotate: 0 }} className="clay-card p-4 rotate-2">
+             <img src="/child_first_page.png" alt="Child using ECHO" width={480} height={360} loading="eager" className="w-full h-auto rounded-xl shadow-inner object-cover" />
+          </motion.div>
            <motion.div
              initial={{ opacity: 0, x: 20 }}
              animate={{ opacity: 1, x: 0 }}
@@ -176,11 +187,16 @@ export default function Home() {
           {subjects.map((s, i) => (
             <motion.div
               key={s.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial="hidden"
+              whileInView="show"
               viewport={{ once: true, margin: "-60px" }}
+              whileHover="hover"
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0 },
+                hover: { y: -6 },
+              }}
               transition={{ duration: 0.55, delay: i * 0.1 }}
-              whileHover={{ y: -6 }}
               className="rounded-[32px] p-8 text-white relative overflow-hidden cursor-pointer group clay-card"
               style={{ background: `linear-gradient(135deg, ${s.from}, ${s.to})` }}
             >
@@ -194,7 +210,17 @@ export default function Home() {
                   <h3 className="text-2xl font-bold">{s.title}</h3>
                   <div className="mt-2 flex items-center justify-between">
                     <p className="text-sm text-white/70">{s.chapters}</p>
-                    <ArrowRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, x: -8 },
+                        show: { opacity: 0, x: -8 },
+                        hover: { opacity: 1, x: 0 },
+                      }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="flex"
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -213,9 +239,9 @@ export default function Home() {
             transition={{ duration: 0.5, type: 'spring' }}
             className="flex-1 w-full max-w-lg"
           >
-            <div className="clay-card p-4 -rotate-2 hover:rotate-0 transition-transform duration-500 bg-card">
-              <img src="/section3image.png" alt="$50 Budget Device" className="w-full h-auto rounded-xl shadow-inner object-cover" />
-            </div>
+            <motion.div whileHover={{ rotate: 0 }} className="clay-card p-4 -rotate-2 bg-card">
+              <img src="/section3image.png" alt="$50 Budget Device" width={560} height={420} loading="lazy" className="w-full h-auto rounded-xl shadow-inner object-cover" />
+            </motion.div>
           </motion.div>
 
           <div className="flex-1 space-y-6 text-center md:text-left">
@@ -235,28 +261,34 @@ export default function Home() {
         <h2 className="text-4xl font-bold mb-16 text-foreground">A safe space to ask "why?"</h2>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <ClayCard className="p-8 text-left relative overflow-hidden h-96 flex flex-col justify-end bg-gradient-to-br from-card to-primary/10">
-            <div className="absolute top-8 right-8 text-primary/20">
-              <Brain className="w-32 h-32" />
-            </div>
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              className="clay-card p-4 mb-4 ml-8 rounded-tr-none max-w-[80%]"
-            >
-              <p className="text-foreground">Why is the sky blue?</p>
-            </motion.div>
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="clay-card p-4 bg-primary/10 border-none rounded-tl-none max-w-[80%] text-foreground"
-            >
-              <p>Imagine sunlight is made of all the colors of a rainbow...</p>
-            </motion.div>
-          </ClayCard>
+      <ClayCard className="p-8 text-left relative overflow-hidden h-96 flex flex-col justify-end bg-gradient-to-br from-card to-primary/10">
+        <div className="absolute top-8 right-8 text-primary/20">
+          <Brain className="w-32 h-32" />
+        </div>
+        {/* Demo conversation bubbles stagger in (ISSUE-010). */}
+        <motion.div
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.25, delayChildren: 0.1 } },
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <motion.div
+            variants={{ hidden: { y: 20, opacity: 0 }, show: { y: 0, opacity: 1 } }}
+            className="clay-card p-4 mb-4 ml-8 rounded-tr-none max-w-[80%]"
+          >
+            <p className="text-foreground">Why is the sky blue?</p>
+          </motion.div>
+          <motion.div
+            variants={{ hidden: { y: 20, opacity: 0 }, show: { y: 0, opacity: 1 } }}
+            className="clay-card p-4 bg-primary/10 border-none rounded-tl-none max-w-[80%] text-foreground"
+          >
+            <p>Imagine sunlight is made of all the colors of a rainbow...</p>
+          </motion.div>
+        </motion.div>
+      </ClayCard>
           
           <div className="text-left space-y-6">
             <h3 className="text-2xl font-bold">Helped, never judged.</h3>
@@ -332,7 +364,7 @@ export default function Home() {
           transition={{ duration: 0.6, type: "spring" }}
         >
           <ClayCard className="bg-primary/5 p-12">
-            <img src="/echo-robot.png" alt="ECHO robot" className="w-28 h-28 mx-auto mb-2 object-contain drop-shadow-2xl animate-orb-float" />
+            <img src="/echo-robot.png" alt="ECHO robot" width={112} height={112} loading="lazy" className="w-28 h-28 mx-auto mb-2 object-contain drop-shadow-2xl animate-orb-float" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to make learning joyful?</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
               Join thousands of parents who trust ECHO to nurture their child's curiosity. Start free, upgrade only when you want more magic.
@@ -348,6 +380,7 @@ export default function Home() {
 
       <Footer />
     </PageTransition>
+    </>
   );
 }
 
@@ -360,7 +393,12 @@ function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNod
       transition={{ duration: 0.5, delay, type: "spring" }}
       className="h-full"
     >
-      <ClayCard className="h-full flex flex-col items-center text-center p-8 hover:-translate-y-2 transition-transform duration-300">
+      <ClayCard
+        whileHover={{ y: -8 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className="h-full flex flex-col items-center text-center p-8"
+      >
         <div className="clay-circle w-16 h-16 flex items-center justify-center mb-6">
           {icon}
         </div>

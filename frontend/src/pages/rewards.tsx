@@ -57,14 +57,14 @@ export default function Rewards() {
     <PageTransition className="px-0">
       <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg-page)' }}>
         <Sidebar />
-        <main className="flex-1 px-4 md:px-8 pt-4 pb-20 md:pb-8">
+        <main className="flex-1 px-4 md:px-8 pt-0 pb-20 md:pb-8">
           <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <h1 className="text-3xl md:text-5xl font-bold mb-3 flex items-center justify-center gap-3">
+          <h1 className="text-xl md:text-3xl font-bold mb-3 flex items-center justify-center gap-3">
           Rewards Store <Gift className="w-9 h-9 text-sage" />
         </h1>
         <p className="text-muted-foreground text-lg">Spend your hard-earned points on fun upgrades.</p>

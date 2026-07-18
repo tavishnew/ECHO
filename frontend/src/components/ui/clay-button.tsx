@@ -16,7 +16,7 @@ export const ClayButton = forwardRef<HTMLButtonElement, ClayButtonProps>(
       default: 'clay-btn bg-card text-foreground',
       primary: 'clay-btn-primary',
       secondary: 'clay-btn-secondary',
-      accent: 'clay-btn-accent',
+      accent: 'clay-btn-sky',
       ghost: 'bg-transparent text-foreground hover:bg-black/5 dark:hover:bg-white/5 rounded-2xl transition-colors'
     };
 

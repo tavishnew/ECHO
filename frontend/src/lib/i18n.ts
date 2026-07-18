@@ -15,6 +15,7 @@ const en: Dict = {
   'nav.login': 'Log in',
   'nav.signin': 'Sign in',
   'nav.logout': 'Log out',
+  'nav.account': 'Account',
   'side.settings': 'Settings',
   'side.pricing': 'Pricing',
   'side.language': 'Language',

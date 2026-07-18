@@ -1,90 +1,160 @@
-# EchoEdu – Voice of Every Child's Future
+# EchoEdu (ECHO) — Voice of Every Child's Future
 
-A voice-first AI tutor app with Indian language support, Groq AI, and Web Speech API.
+A **voice-first AI tutor** for school students. Pick a class, subject, and topic,
+then chat with **ECHO** by typing or speaking. ECHO answers in plain text (via
+**Groq**) and reads them aloud (via **free Microsoft Edge neural TTS**) in the
+student's language.
 
-## 🆕 What's New
+This repo is a **monorepo** with two independently-runnable parts:
 
-1. **Authentication** – Sign up / Login with Free & Premium tiers
-2. **Dashboard** – Free users see an "Upgrade to Premium" button
-3. **Groq AI** – Real AI answers via `.env` API key
-4. **12 Indian Languages** – Switch language anywhere; AI responds in that language
+- `frontend/` — Vite + React + TypeScript single-page app (the product UI).
+- `backend/` — small Express server that proxies Groq and generates speech, keeping the API key server-side.
 
-## 🚀 Setup
+There is **no root `package.json`** — install and run each folder separately.
+
+## Tech stack
+
+**Frontend (`frontend/`)**
+
+- React 19 + TypeScript, bundled by Vite (`vite.config.ts`).
+- Tailwind CSS v4 (via `@tailwindcss/vite`).
+- Framer Motion (animation), `wouter` (routing), TanStack Query (data fetching).
+- Client state in `src/lib/store.tsx` (React context + `localStorage`); i18n in `src/lib/i18n.ts` + `src/lib/languages.ts`.
+
+**Backend (`backend/`)**
+
+- Express 5 (`index.js`), `msedge-tts` for free neural text-to-speech (no API key needed), `cors` + JSON body parsing.
+- Loads `.env` manually, so it runs without a dotenv dependency.
+
+## Prerequisites
+
+- Node.js 18+ (uses native ESM `import.meta` and the built-in `fetch`).
+- A free **Groq API key** for the AI tutor — https://console.groq.com/keys.
+
+> Windows / PowerShell note: use `npm.cmd` (not `npm`) to avoid execution-policy errors.
+
+## Setup
 
 ### 1. Install dependencies
+
 ```bash
-cd echoedu
-npm install
+# Terminal 1 — backend
+cd backend
+npm.cmd install
+
+# Terminal 2 — frontend
+cd frontend
+npm.cmd install
 ```
 
-### 2. Configure your API keys
+### 2. Configure the backend
 
-Copy `.env.example` to `.env`:
+Copy the example env and add your Groq key:
+
 ```bash
-cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-Edit `.env` and paste your key:
+`backend/.env`:
+
 ```
-VITE_GROQ_API_KEY=sk-or-v1-xxxxxxxxxxxxxxxx
-ELEVENLABS_API_KEY=sk_...
-ELEVENLABS_VOICE_ID=pNInz6obpgDQGcFmaJgB
-ELEVENLABS_MODEL_ID=eleven_v3
+GROQ_API_KEY=your_groq_api_key_here
 ```
 
-Get your free API key at: https://console.groq.com/
-Get your ElevenLabs API key at: https://elevenlabs.io/
+The key lives **only on the server** — the browser never sees it. In dev the
+frontend calls `/api/ask` and Vite proxies that to the backend.
 
-### 3. Add your public images
+### 3. Run the backend
 
-Make sure these images are in the `public/` folder:
-- `child_first_page.png`
-- `section3image.png`
-- `favicon.svg`
-
-### 4. Run the app
 ```bash
-npm run dev
+cd backend
+node index.js
 ```
 
-In a second terminal, run the local TTS server:
+The server listens on **http://localhost:3001** and prints the supported languages.
+
+> For a quick watch-reload loop you can use `npm run dev` (`node --watch index.js`),
+> but for a stable long-lived session prefer `node index.js` so a stray log file
+> can't trigger a restart loop.
+
+### 4. Run the frontend
+
 ```bash
-npm run server
+cd frontend
+npm.cmd run dev
 ```
 
-Open http://localhost:5173
+Open **http://localhost:5173**. Vite proxies any `/api/*` request to
+`http://localhost:3001` (see `frontend/vite.config.ts`).
 
-## 📁 Project Structure
+## Build & preview (frontend)
 
-```
-src/
-├── context/
-│   └── AuthContext.jsx       # Auth + language state
-├── components/
-│   ├── Navbar.jsx            # Navbar with auth & language selector
-│   ├── Navbar.css
-│   ├── LanguageSelector.jsx  # Indian language dropdown
-│   └── LanguageSelector.css
-├── pages/
-│   ├── HomePage.jsx          # Landing page
-│   ├── SignupPage.jsx        # Sign up with tier selection
-│   ├── LoginPage.jsx         # Login
-│   ├── Dashboard.jsx         # User dashboard + upgrade button
-│   ├── Dashboard.css
-│   ├── TutorPage.jsx         # AI chat interface
-│   ├── TutorPage.css
-│   └── Auth.css
-├── utils/
-│   └── groq.js         # Groq API integration
-├── App.jsx                   # Router setup
-├── App.css                   # Homepage styles
-├── Navbar.css
-├── index.css
-└── main.jsx
+```bash
+cd frontend
+npm.cmd run build     # outputs to frontend/dist/public
+npm.cmd run serve     # preview the production build
+npm.cmd run typecheck # tsc --noEmit
 ```
 
-## 🌐 Supported Indian Languages
+## Project structure
 
-English, Hindi (हिंदी), Bengali (বাংলা), Telugu (తెలుగు), Marathi (मराठी),
-Tamil (தமிழ்), Gujarati (ગુજરાતી), Kannada (ಕನ್ನಡ), Malayalam (മലയാളം),
-Punjabi (ਪੰਜਾਬੀ), Odia (ଓଡ଼ିଆ), Urdu (اردو)
+```
+backend/
+  index.js            # Express server: /api/ask (Groq), /api/tts (edge-tts),
+                      #   /api/translate (MyMemory), /api/health
+  .env.example        # GROQ_API_KEY
+  package.json        # scripts: start (node index.js), dev (node --watch index.js)
+
+frontend/
+  index.html
+  vite.config.ts      # dev server on :5173, proxies /api -> :3001
+  .env.example        # optional VITE_API_URL for production
+  src/
+    main.tsx, App.tsx, index.css
+    api/groq.ts                 # client wrapper around /api/ask
+    lib/
+      store.tsx                 # global state (user, language, selectedClass)
+      i18n.ts, languages.ts     # translations + language list
+      utils.ts
+    components/
+      layout/  navbar.tsx, sidebar.tsx, page-transition.tsx, page-skeleton.tsx, footer.tsx
+      ui/      clay-button.tsx, clay-card.tsx, clay-input.tsx
+      voice/   LanguageSelector.tsx, MessageBubble.tsx, VoiceButton.tsx, TypingIndicator.tsx
+    hooks/useSpeechRecognition.ts
+    utils/speak.ts              # browser / edge-tts speech
+    pages/  home, signup, login, dashboard, tutor, rewards, pricing, account, not-found
+```
+
+## Features
+
+- **Voice-first tutor** — type or speak; ECHO replies in text and spoken voice.
+- **Multilingual** — the UI selector offers 10 languages: English plus 9 Indian
+  languages (Hindi, Bengali, Telugu, Marathi, Tamil, Gujarati, Kannada, Malayalam,
+  Punjabi). The backend also ships free neural TTS voices for Odia and Urdu.
+  Switch language from the home page or the sidebar `LanguageSelector`; the AI
+  answers in the chosen language.
+- **Free & Premium tiers** — sign up and choose a plan; free users see an upgrade prompt.
+- **Auth** — signup / login; state lives in `lib/store.tsx` and is persisted to
+  `localStorage`. Passwords are never stored.
+- **Dashboard** — subject/curriculum picker keyed to the selected class; brand-new
+  users see an empty state instead of fabricated progress.
+- **Rewards & pricing** — gamified progress and plan-comparison pages.
+
+## API reference (backend)
+
+| Method | Path             | Purpose                                                                 |
+|--------|------------------|-------------------------------------------------------------------------|
+| POST   | `/api/ask`       | Groq chat completion (server holds `GROQ_API_KEY`). Body: `{ messages, languageCode, subject, topic }`. |
+| POST   | `/api/tts`       | Microsoft Edge neural TTS. Body: `{ text, language }`. Returns `audio/mpeg` stream. |
+| POST   | `/api/translate` | MyMemory translation. Body: `{ text, targetLang }`.                     |
+| GET    | `/api/health`    | Status + supported voices / languages.                                  |
+
+## Notes & housekeeping
+
+- **Dev logs** — `frontend/dev.*.log` are Vite dev-server logs. They are gitignored
+  (`*.log`) and safe to delete.
+- The repo deliberately has **no root `package.json`**; each app is self-contained.
+
+## License
+
+ISC.
