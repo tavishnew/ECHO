@@ -1,13 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts';
+import rateLimit from 'express-rate-limit';
+import dotenv from 'dotenv';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const MAX_TOKENS = 1200;
+const MAX_MESSAGES = 30;
+const MAX_MESSAGES_BYTES = 20 * 1024;
+const DEFAULT_FRONTEND_URLS = 'http://localhost:5173';
 
 const LANGUAGE_INSTRUCTIONS = {
   en: 'Respond in English.',
@@ -46,35 +50,47 @@ const LANG_TO_VOICE = {
 
 const DEFAULT_VOICE = 'en-IN-NeerjaNeural';
 
-app.use(cors({
-  origin: (origin, cb) => cb(null, true),   // allow all origins (Vercel, localhost, etc.)
-  credentials: true,
-}));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb' }));
-
 // ─── Load .env ────────────────────────────────────────────────────────────────
-for (const envFile of [
+for (const envPath of [
   path.join(rootDir, '.env.local'),
   path.join(rootDir, '.env'),
   path.join(__dirname, '.env'),
 ]) {
-  const envPath = envFile;
-  if (!fs.existsSync(envPath)) continue;
-  const entries = fs.readFileSync(envPath, 'utf8').split(/\r?\n/);
-  for (const entry of entries) {
-    const trimmed = entry.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const sep = trimmed.indexOf('=');
-    if (sep === -1) continue;
-    const key   = trimmed.slice(0, sep).trim();
-    const value = trimmed.slice(sep + 1).trim();
-    if (key && value && process.env[key] === undefined) process.env[key] = value;
-  }
+  dotenv.config({ path: envPath, quiet: true });
 }
 
+// Needed for correct per-IP rate limiting behind a reverse proxy (Render, Fly, nginx…).
+if (process.env.TRUST_PROXY) app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1);
+
+const allowedOrigins = (process.env.FRONTEND_URLS || DEFAULT_FRONTEND_URLS)
+  .split(',')
+  .map(o => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    // Allow non-browser clients (curl, server-to-server) that send no Origin.
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) return cb(null, true);
+    cb(new Error(`Origin not allowed by CORS: ${origin}`));
+  },
+}));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
+
+const makeLimiter = max => rateLimit({
+  windowMs: 60 * 1000,
+  max,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please slow down and try again shortly.' },
+});
+
+const askLimiter       = makeLimiter(20);
+const ttsLimiter       = makeLimiter(30);
+const translateLimiter = makeLimiter(30);
+
 // ─── TTS endpoint  (Microsoft Edge TTS — free, no API key) ───────────────────
-app.post('/api/tts', async (req, res) => {
+app.post('/api/tts', ttsLimiter, async (req, res) => {
   const { text, language = 'en' } = req.body;
   const trimmed = typeof text === 'string' ? text.trim() : '';
 
@@ -108,7 +124,7 @@ app.post('/api/tts', async (req, res) => {
 });
 
 // ─── /api/translate  — MyMemory free translation ─────────────────────────────
-app.post('/api/translate', async (req, res) => {
+app.post('/api/translate', translateLimiter, async (req, res) => {
   const { text, targetLang } = req.body;
   if (!text || !targetLang) return res.status(400).json({ error: 'Missing text or targetLang' });
   try {
@@ -131,7 +147,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ─── /api/ask  ── Groq chat completion (server-side key) ─────────────────────
-app.post('/api/ask', async (req, res) => {
+app.post('/api/ask', askLimiter, async (req, res) => {
   const { messages, languageCode = 'en', subject, topic } = req.body || {};
 
   const apiKey = process.env.GROQ_API_KEY;
@@ -142,6 +158,12 @@ app.post('/api/ask', async (req, res) => {
   }
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Missing messages' });
+  }
+  if (messages.length > MAX_MESSAGES) {
+    return res.status(400).json({ error: `Too many messages (max ${MAX_MESSAGES}).` });
+  }
+  if (Buffer.byteLength(JSON.stringify(messages), 'utf8') > MAX_MESSAGES_BYTES) {
+    return res.status(400).json({ error: 'Conversation history is too large.' });
   }
 
   const lang = LANGUAGE_INSTRUCTIONS[languageCode] || LANGUAGE_INSTRUCTIONS.en;

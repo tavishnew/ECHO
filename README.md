@@ -24,7 +24,8 @@ There is **no root `package.json`** — install and run each folder separately.
 **Backend (`backend/`)**
 
 - Express 5 (`index.js`), `msedge-tts` for free neural text-to-speech (no API key needed), `cors` + JSON body parsing.
-- Loads `.env` manually, so it runs without a dotenv dependency.
+- Loads `.env` via `dotenv`; `express-rate-limit` caps per-IP traffic on `/api/ask`, `/api/tts` and `/api/translate`.
+- CORS is restricted to an explicit origin allow-list (`FRONTEND_URLS`).
 
 ## Prerequisites
 
@@ -59,10 +60,16 @@ cp backend/.env.example backend/.env
 
 ```
 GROQ_API_KEY=your_groq_api_key_here
+FRONTEND_URLS=http://localhost:5173
 ```
 
 The key lives **only on the server** — the browser never sees it. In dev the
 frontend calls `/api/ask` and Vite proxies that to the backend.
+
+`FRONTEND_URLS` is a comma-separated allow-list of browser origins permitted to
+call the API (defaults to `http://localhost:5173`); add your deployed frontend
+URL in production. When the backend runs behind a reverse proxy, set
+`TRUST_PROXY=1` so rate limiting uses the real client IP.
 
 ### 3. Run the backend
 
