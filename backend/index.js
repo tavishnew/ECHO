@@ -67,13 +67,15 @@ const allowedOrigins = (process.env.FRONTEND_URLS || DEFAULT_FRONTEND_URLS)
   .map(o => o.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
-app.use(cors({
-  origin: (origin, cb) => {
-    // Allow non-browser clients (curl, server-to-server) that send no Origin.
-    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) return cb(null, true);
-    cb(new Error(`Origin not allowed by CORS: ${origin}`));
-  },
-}));
+const isAllowedOrigin = origin =>
+  // Non-browser clients (curl, server-to-server) send no Origin.
+  !origin || allowedOrigins.includes(origin.replace(/\/$/, ''));
+
+app.use(cors({ origin: (origin, cb) => cb(null, isAllowedOrigin(origin)) }));
+app.use((req, res, next) => {
+  if (isAllowedOrigin(req.headers.origin)) return next();
+  res.status(403).json({ error: 'Origin not allowed' });
+});
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ limit: '1mb', extended: true }));
 
