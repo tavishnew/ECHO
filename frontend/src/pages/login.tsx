@@ -8,7 +8,7 @@ import { ClayCard } from '@/components/ui/clay-card';
 import { ClayButton } from '@/components/ui/clay-button';
 import { ClayInput } from '@/components/ui/clay-input';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
-import { Eye, EyeOff, Mic, Loader2, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Mic, Loader2, AlertCircle, Info } from 'lucide-react';
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -66,6 +66,14 @@ export default function Login() {
             </div>
             <h1 className="text-2xl font-bold mb-2">{t('auth.welcomeBack')}</h1>
             <p className="text-muted-foreground">{t('auth.readyNew')}</p>
+          </div>
+
+          <div className="mb-5 flex items-start gap-2 text-sm text-muted-foreground bg-muted/50 rounded-2xl p-3">
+            <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>
+              Accounts are not stored on a server yet. Your profile and progress live only on this
+              device and will be lost if you clear your browser storage or switch devices.
+            </span>
           </div>
 
             <form onSubmit={handleLogin} className="space-y-5">
